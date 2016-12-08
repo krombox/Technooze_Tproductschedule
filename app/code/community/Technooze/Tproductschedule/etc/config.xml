@@ -28,6 +28,7 @@
             </technooze_tproductschedule_setup>
         </resources>
     </global>
+    
     <adminhtml>
         <events>
             <adminhtml_catalog_product_edit_prepare_form>
@@ -46,7 +47,7 @@
             <technooze_tproductschedule_process_schedule>
                 <schedule>
                     <!-- Schedule for midnight (daily) -->
-                    <cron_expr>0 0 * * *</cron_expr>
+                    <cron_expr>* * * * *</cron_expr>
                 </schedule>
                 <run>
                     <model>technooze_tproductschedule/observer::cronProcessScheduledProducts</model>

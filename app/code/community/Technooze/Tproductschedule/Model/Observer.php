@@ -43,10 +43,10 @@ class Technooze_Tproductschedule_Model_Observer
      */
     public function cronProcessScheduledProducts()
     {
-        $currentDate = Mage::app()->getLocale()->date()
+        $currentDate = Mage::app()->getLocale()->date()            
             ->setTimezone(Mage_Core_Model_Locale::DEFAULT_TIMEZONE)
             ->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
-
+    
         $productModel = Mage::getModel('catalog/product');
 
         /* @var $expiredProductsCollection Mage_Catalog_Model_Resource_Eav_Mysql4_Product_Collection */
@@ -55,11 +55,12 @@ class Technooze_Tproductschedule_Model_Observer
             // Add filter for expired but products haven't yet deactivated
             ->addFieldToFilter(
                 Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_EXPIRY_DATE,
-                array(
-                    'notnull' => 1,
-                    'lt'      => $currentDate
-                )
+                array('notnull' => 1)
             )
+            ->addFieldToFilter(
+                Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_EXPIRY_DATE,
+                array('lt' => $currentDate)
+            )    
             ->addFieldToFilter(
                 Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_STATUS,
                 Mage_Catalog_Model_Product_Status::STATUS_ENABLED
@@ -67,6 +68,7 @@ class Technooze_Tproductschedule_Model_Observer
 
         // Retrieve product ids for deactivation
         $expiredProductIds = $expiredProductsCollection->getAllIds();
+        
         unset($expiredProductsCollection);
 
         if ($expiredProductIds) {
@@ -84,11 +86,12 @@ class Technooze_Tproductschedule_Model_Observer
         $activatedProductsCollection = $productModel->getCollection()
             ->addFieldToFilter(
                 Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_ACTIVATION_DATE,
-                array(
-                    'notnull' => 1,
-                    'lteq'    => $currentDate
-                )
+                array('notnull' => 1)
             )
+            ->addFieldToFilter(
+                Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_ACTIVATION_DATE,
+                array('lteq' => $currentDate)
+            )    
             // Exclude expired products
             ->addFieldToFilter(
                 Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_EXPIRY_DATE,
@@ -101,10 +104,11 @@ class Technooze_Tproductschedule_Model_Observer
                 Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_STATUS,
                 Mage_Catalog_Model_Product_Status::STATUS_DISABLED
             );
+                
 
         // Retrieve product ids for activation
         $activatedProductIds = $activatedProductsCollection->getAllIds();
-        unset($activatedProductsCollection);
+        unset($activatedProductsCollection);        
 
         if ($activatedProductIds) {
             Mage::getSingleton('catalog/product_action')

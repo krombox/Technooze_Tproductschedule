@@ -3,6 +3,7 @@
 
 $this->startSetup();
 
+$eavConfig = Mage::getSingleton('eav/config');
 $this->addAttributeGroup('catalog_product', 'Default', 'Product Schedule', 7);
 
 // Activation date column adding to product entity table
@@ -24,7 +25,7 @@ $this->addAttribute(
     'catalog_product',
     Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_ACTIVATION_DATE,
     array(
-        'type'             => 'static',
+        'type'             => 'datetime',
         'label'            => 'Active From',
         'frontend'         => '',
         'table'            => '',
@@ -47,12 +48,16 @@ $this->addAttribute(
     )
 );
 
+$attribute = $eavConfig->getAttribute('catalog_product', Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_ACTIVATION_DATE);
+$attribute->setData('frontend_input_renderer', 'technooze_tproductschedule/adminhtml_renderer_datetime');
+$attribute->save();
+
 // Expiry date attribute information adding to the product entity
 $this->addAttribute(
     'catalog_product',
     Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_EXPIRY_DATE,
     array(
-        'type'             => 'static',
+        'type'             => 'datetime',
         'label'            => 'Active To',
         'frontend'         => '',
         'table'            => '',
@@ -74,6 +79,10 @@ $this->addAttribute(
         'group'            => 'Product Schedule'
     )
 );
+
+$attribute = $eavConfig->getAttribute('catalog_product', Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_EXPIRY_DATE);
+$attribute->setData('frontend_input_renderer', 'technooze_tproductschedule/adminhtml_renderer_datetime');
+$attribute->save();
 
 $this->installEntities();
 

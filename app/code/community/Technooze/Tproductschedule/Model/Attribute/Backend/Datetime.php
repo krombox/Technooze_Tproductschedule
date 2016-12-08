@@ -106,12 +106,13 @@ class Technooze_Tproductschedule_Model_Attribute_Backend_Datetime
         if (empty($date)) {
             return false;
         }
-
+        
         $compareDate = Mage::app()->getLocale()
             ->date($date, Varien_Date::DATETIME_INTERNAL_FORMAT)
-            ->setTime('23:59:59');
+        ;
+        
         $currentDate = Mage::app()->getLocale()->date();
-
+        
         return $currentDate->compare($compareDate);
     }
 
