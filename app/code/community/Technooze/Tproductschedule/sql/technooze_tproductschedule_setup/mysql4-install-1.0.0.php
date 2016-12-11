@@ -1,10 +1,13 @@
 <?php
 /* @var $this Technooze_Tproductschedule_Model_Mysql4_Setup */
 
-$this->startSetup();
+$installer = $this->startSetup();
 
 $eavConfig = Mage::getSingleton('eav/config');
-$this->addAttributeGroup('catalog_product', 'Default', 'Product Schedule', 7);
+$entityTypeId = $installer->getEntityTypeId('catalog_product');
+$attributeSetId = $installer->getDefaultAttributeSetId($entityTypeId);
+$this->addAttributeGroup($entityTypeId, $attributeSetId, 'Product Schedule', 7);
+
 
 // Activation date column adding to product entity table
 $this->getConnection()->addColumn(
@@ -20,7 +23,7 @@ $this->getConnection()->addColumn(
     'DATETIME DEFAULT NULL'
 );
 
-// Activation date attribute information adding to the product entity
+//Activation date attribute information adding to the product entity
 $this->addAttribute(
     'catalog_product',
     Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_ACTIVATION_DATE,
@@ -47,7 +50,7 @@ $this->addAttribute(
         'group'            => 'Product Schedule'
     )
 );
-
+//
 $attribute = $eavConfig->getAttribute('catalog_product', Technooze_Tproductschedule_Model_Attribute_Backend_Datetime::ATTRIBUTE_ACTIVATION_DATE);
 $attribute->setData('frontend_input_renderer', 'technooze_tproductschedule/adminhtml_renderer_datetime');
 $attribute->save();
@@ -84,7 +87,7 @@ $attribute = $eavConfig->getAttribute('catalog_product', Technooze_Tproductsched
 $attribute->setData('frontend_input_renderer', 'technooze_tproductschedule/adminhtml_renderer_datetime');
 $attribute->save();
 
-$this->installEntities();
+//$this->installEntities(); //This cause reassign attributes groups
 
 $this->endSetup();
 
