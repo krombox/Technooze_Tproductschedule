@@ -6,6 +6,7 @@
  */
 class Technooze_Tproductschedule_Model_Observer
 {
+    static $block_html_cache = 'block_html';
     /**
      * Observes event 'adminhtml_catalog_product_edit_prepare_form'
      * and adds custom format for date input
@@ -118,5 +119,8 @@ class Technooze_Tproductschedule_Model_Observer
                     Mage_Core_Model_App::ADMIN_STORE_ID
                 );
         }
+        
+        Mage::app()->getCacheInstance()->cleanType(self::$block_html_cache);
+        Mage::dispatchEvent('adminhtml_cache_refresh_type', array('type' => self::$block_html_cache));
     }
 }
